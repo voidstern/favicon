@@ -12,6 +12,6 @@ php:
   - nightly
 install:
   - composer self-update
-  - composer install --prefer-dist
+  - composer install
 script:
   - vendor/bin/phpunit tests
