@@ -1,7 +1,4 @@
 language: php
-cache:
-  directories:
-    - $HOME/.composer/cache
 php:
   - '5.3'
   - '5.4'
