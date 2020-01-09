@@ -13,7 +13,7 @@ Here are the changes you can see in this version:
 Requirements
 ------------
 
-- [PHP 5.3](http://php.net/)
+- [PHP 5.6](http://php.net/)
 - [php-xml](http://php.net/manual/fr/refs.xml.php) extension: parse HTML content
 - [php-fileinfo](http://php.net/manual/fr/book.fileinfo.php) extension: check image type
 
