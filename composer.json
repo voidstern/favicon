@@ -25,6 +25,8 @@
   },
   "require": {
     "php": ">=5.6",
+    "ext-dom": "*",
+    "ext-fileinfo": "*",
     "squizlabs/php_codesniffer": "^3.5"
   },
   "require-dev": {
