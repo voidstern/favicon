@@ -2,7 +2,8 @@
 
 namespace Favicon;
 
-class FaviconTest extends \PHPUnit_Framework_TestCase {
+class FaviconTest extends \PHPUnit_Framework_TestCase
+{
     const DEFAULT_FAV_CHECK = 'favicon.ico';
     const TEST_LOGO_NAME = 'default.ico';
     private $RESOURCE_FAV_ICO;
@@ -10,9 +11,10 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     const SANDBOX = 'tests/sandbox';
     const RESOURCES = 'tests/resources';
 
-    public function setUp() {
+    public function setUp()
+    {
         directory_create(self::SANDBOX, 0775);
-        $this->RESOURCE_FAV_ICO = self::RESOURCES .'/'. self::TEST_LOGO_NAME;
+        $this->RESOURCE_FAV_ICO = self::RESOURCES . '/' . self::TEST_LOGO_NAME;
         $this->CACHE_TEST_DIR = self::SANDBOX;
     }
 
@@ -25,10 +27,11 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::__construct
     * @uses Favicon
     */
-    public function testUrlIsDefinedByConstructor() {
+    public function testUrlIsDefinedByConstructor()
+    {
         $url = 'http://foo.bar';
         $args = array( 'url' => $url );
-        $fav = new Favicon( $args );
+        $fav = new Favicon($args);
         $this->assertEquals($url, $fav->getUrl());
     }
     
@@ -37,12 +40,13 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::cache
     * @uses Favicon
     */
-    public function testInitEmptyCache() {
-    	$fav = new Favicon();
-    	$fav->cache();
-    	
-    	$this->assertTrue(is_writable($fav->getCacheDir()));
-    	$this->assertEquals(604800, $fav->getCacheTimeout());
+    public function testInitEmptyCache()
+    {
+        $fav = new Favicon();
+        $fav->cache();
+        
+        $this->assertTrue(is_writable($fav->getCacheDir()));
+        $this->assertEquals(604800, $fav->getCacheTimeout());
     }
     
     /**
@@ -50,18 +54,19 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::cache
     * @uses Favicon
     */
-    public function testInitNotWritableCache() {
-    	$dir = '/f0o/b@r';
-    	
-    	$fav = new Favicon();
-    	$params = array(
-    		'dir' => $dir,
-    		);
-    	$fav->cache($params);
-    	
-    	$this->assertEquals($dir, $fav->getCacheDir());
-    	$this->assertFalse(is_writable($fav->getCacheDir()));
-    	$this->assertEquals(604800, $fav->getCacheTimeout());
+    public function testInitNotWritableCache()
+    {
+        $dir = '/f0o/b@r';
+        
+        $fav = new Favicon();
+        $params = array(
+            'dir' => $dir,
+            );
+        $fav->cache($params);
+        
+        $this->assertEquals($dir, $fav->getCacheDir());
+        $this->assertFalse(is_writable($fav->getCacheDir()));
+        $this->assertEquals(604800, $fav->getCacheTimeout());
     }
     
     /**
@@ -69,73 +74,77 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::cache
     * @uses Favicon
     */
-    public function testInitWritableCacheAndTimeout() {
-    	$timeout = 1000;
-    	
-    	$fav = new Favicon();
-    	$params = array(
-    		'dir' => $this->CACHE_TEST_DIR,
-    		'timeout' => $timeout,
-    		);
-    	$fav->cache($params);
-    	
-    	$this->assertEquals($this->CACHE_TEST_DIR, $fav->getCacheDir());
-    	$this->assertTrue(is_writable($fav->getCacheDir()));
-    	$this->assertEquals($timeout, $fav->getCacheTimeout());
+    public function testInitWritableCacheAndTimeout()
+    {
+        $timeout = 1000;
+        
+        $fav = new Favicon();
+        $params = array(
+            'dir' => $this->CACHE_TEST_DIR,
+            'timeout' => $timeout,
+            );
+        $fav->cache($params);
+        
+        $this->assertEquals($this->CACHE_TEST_DIR, $fav->getCacheDir());
+        $this->assertTrue(is_writable($fav->getCacheDir()));
+        $this->assertEquals($timeout, $fav->getCacheTimeout());
     }
     
     /**
     * @covers Favicon::baseUrl
     * @uses Favicon
     */
-    public function testBaseFalseUrl() {
-    	$fav = new Favicon();
-    	
-    	$notAnUrl = 'fgkljkdf';
-    	$notPrefixedUrl = 'domain.tld';
-    	$noHostUrl = 'http://';
-    	$invalidPrefixUrl = 'ftp://domain.tld';
-    	$emptyUrl = '';
-    	
-    	$this->assertEquals(FALSE, $fav->baseUrl($notAnUrl));
-    	$this->assertEquals(FALSE, $fav->baseUrl($notPrefixedUrl));
-    	$this->assertEquals(FALSE, $fav->baseUrl($noHostUrl));
-    	$this->assertEquals(FALSE, $fav->baseUrl($invalidPrefixUrl));
-    	$this->assertEquals(FALSE, $fav->baseUrl($emptyUrl));
+    public function testBaseFalseUrl()
+    {
+        $fav = new Favicon();
+        
+        $notAnUrl = 'fgkljkdf';
+        $notPrefixedUrl = 'domain.tld';
+        $noHostUrl = 'http://';
+        $invalidPrefixUrl = 'ftp://domain.tld';
+        $emptyUrl = '';
+        
+        $this->assertEquals(false, $fav->baseUrl($notAnUrl));
+        $this->assertEquals(false, $fav->baseUrl($notPrefixedUrl));
+        $this->assertEquals(false, $fav->baseUrl($noHostUrl));
+        $this->assertEquals(false, $fav->baseUrl($invalidPrefixUrl));
+        $this->assertEquals(false, $fav->baseUrl($emptyUrl));
     }
     
     /**
     * @covers Favicon::baseUrl
     * @uses Favicon
     */
-    public function testBaseUrlValid() {
-    	$fav = new Favicon();
-    	
-    	$simpleUrl = 'http://domain.tld';
-    	$simpleHttpsUrl = 'https://domain.tld';
-    	$simpleUrlWithTraillingSlash = 'http://domain.tld/';
-    	$simpleWithPort = 'http://domain.tld:8080';
-    	$userWithoutPasswordUrl = 'http://user@domain.tld';
-    	$userPasswordUrl = 'http://user:password@domain.tld';
-    	$urlWithUnusedInfo = 'http://domain.tld/index.php?foo=bar&bar=foo#foobar';
-    	$urlWithPath = 'http://domain.tld/my/super/path';
-    	
-    	$this->assertEquals(self::slash($simpleUrl), $fav->baseUrl($simpleUrl));
-    	$this->assertEquals(self::slash($simpleHttpsUrl), $fav->baseUrl($simpleHttpsUrl));
-    	$this->assertEquals(self::slash($simpleUrlWithTraillingSlash), $fav->baseUrl($simpleUrlWithTraillingSlash));
-    	$this->assertEquals(self::slash($simpleWithPort), $fav->baseUrl($simpleWithPort));
-    	$this->assertEquals(self::slash($userWithoutPasswordUrl), $fav->baseUrl($userWithoutPasswordUrl));
-    	$this->assertEquals(self::slash($userPasswordUrl), $fav->baseUrl($userPasswordUrl));
-    	$this->assertEquals(self::slash($simpleUrl), $fav->baseUrl($urlWithUnusedInfo));
-    	$this->assertEquals(self::slash($simpleUrl), $fav->baseUrl($urlWithPath, false));
-    	$this->assertEquals(self::slash($urlWithPath), $fav->baseUrl($urlWithPath, true));
+    public function testBaseUrlValid()
+    {
+        $fav = new Favicon();
+        
+        $simpleUrl = 'http://domain.tld';
+        $simpleHttpsUrl = 'https://domain.tld';
+        $simpleUrlWithTraillingSlash = 'http://domain.tld/';
+        $simpleWithPort = 'http://domain.tld:8080';
+        $userWithoutPasswordUrl = 'http://user@domain.tld';
+        $userPasswordUrl = 'http://user:password@domain.tld';
+        $urlWithUnusedInfo = 'http://domain.tld/index.php?foo=bar&bar=foo#foobar';
+        $urlWithPath = 'http://domain.tld/my/super/path';
+        
+        $this->assertEquals(self::slash($simpleUrl), $fav->baseUrl($simpleUrl));
+        $this->assertEquals(self::slash($simpleHttpsUrl), $fav->baseUrl($simpleHttpsUrl));
+        $this->assertEquals(self::slash($simpleUrlWithTraillingSlash), $fav->baseUrl($simpleUrlWithTraillingSlash));
+        $this->assertEquals(self::slash($simpleWithPort), $fav->baseUrl($simpleWithPort));
+        $this->assertEquals(self::slash($userWithoutPasswordUrl), $fav->baseUrl($userWithoutPasswordUrl));
+        $this->assertEquals(self::slash($userPasswordUrl), $fav->baseUrl($userPasswordUrl));
+        $this->assertEquals(self::slash($simpleUrl), $fav->baseUrl($urlWithUnusedInfo));
+        $this->assertEquals(self::slash($simpleUrl), $fav->baseUrl($urlWithPath, false));
+        $this->assertEquals(self::slash($urlWithPath), $fav->baseUrl($urlWithPath, true));
     }
     
     /**
     * @covers Favicon::info
     * @uses Favicon
     */
-    public function testBlankInfo() {
+    public function testBlankInfo()
+    {
         $fav = new Favicon();
         $this->assertFalse($fav->info(''));
     }
@@ -144,7 +153,8 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::info
     * @uses Favicon
     */
-    public function testInfoOk() {
+    public function testInfoOk()
+    {
         $fav = new Favicon();
         $dataAccess = $this->getMock('Favicon\DataAccess');
         $header = array(
@@ -164,7 +174,8 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::info
     * @uses Favicon
     */
-    public function testInfoRedirect() {
+    public function testInfoRedirect()
+    {
         $dataAccess = $this->getMock('Favicon\DataAccess');
         $fav = new Favicon();
         $fav->setDataAccess($dataAccess);
@@ -221,7 +232,8 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::get
     * @uses Favicon
     */
-    public function testGetExistingFavicon() {
+    public function testGetExistingFavicon()
+    {
         $url = 'http://domain.tld/';
         $path = 'sub/';
         
@@ -245,7 +257,8 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::get
     * @uses Favicon
     */
-    public function testGetOriginalFavicon() {
+    public function testGetOriginalFavicon()
+    {
         $url = 'http://domain.tld/original';
         $logo = 'default.ico';
         $fav = new Favicon(array('url' => $url));
@@ -268,7 +281,8 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::get
     * @uses Favicon
     */
-    public function testGetDefaultFavicon() {
+    public function testGetDefaultFavicon()
+    {
         $url = 'http://domain.tld/';
         $fav = new Favicon(array('url' => $url));
         
@@ -289,7 +303,8 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::get
     * @uses Favicon
     */
-    public function testGetCachedFavicon() {
+    public function testGetCachedFavicon()
+    {
         $url = 'http://domaincache.tld/';
         $fav = new Favicon(array('url' => $url));
         
@@ -320,17 +335,19 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::get
     * @uses Favicon
     */
-    public function testGetFaviconEmptyUrl() {
-    	$fav = new Favicon();
-    	$this->assertFalse($fav->get());
+    public function testGetFaviconEmptyUrl()
+    {
+        $fav = new Favicon();
+        $this->assertFalse($fav->get());
     }
     
     /**
     * @covers Favicon::get
     * @uses Favicon
     */
-    public function testGetNotFoundFavicon() {
-    	$url = 'http://domain.tld';
+    public function testGetNotFoundFavicon()
+    {
+        $url = 'http://domain.tld';
         $fav = new Favicon(array('url' => $url));
         // No cache
         $fav->cache(array('dir' => $this->CACHE_TEST_DIR));
@@ -347,8 +364,9 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::get
     * @uses Favicon
     */
-    public function testGetFalsePositive() {
-    	$url = 'http://domain.tld';
+    public function testGetFalsePositive()
+    {
+        $url = 'http://domain.tld';
         $fav = new Favicon(array('url' => $url));
         // No cache
         $fav->cache(array('dir' => $this->CACHE_TEST_DIR));
@@ -365,8 +383,9 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::get
     * @uses Favicon
     */
-    public function testGetNoHtmlHeader() {
-    	$url = 'http://domain.tld/original';
+    public function testGetNoHtmlHeader()
+    {
+        $url = 'http://domain.tld/original';
         $fav = new Favicon(array('url' => $url));
         
         // No cache
@@ -386,8 +405,9 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
     * @covers Favicon::get
     * @uses Favicon
     */
-    public function testGetValidFavNoCacheSetup() {
-    	$url = 'http://domain.tld';
+    public function testGetValidFavNoCacheSetup()
+    {
+        $url = 'http://domain.tld';
         $fav = new Favicon(array('url' => $url));
         
         $dataAccess = $this->getMock('Favicon\DataAccess', array('retrieveHeader', 'retrieveUrl'));
@@ -398,8 +418,8 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
         $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
         
         $this->assertEquals(self::slash($url) . self::DEFAULT_FAV_CHECK, $fav->get());
-        directory_clear(__DIR__ .'/../../resources/cache');
-        touch(__DIR__ .'/../../resources/cache/.gitkeep');
+        directory_clear(__DIR__ . '/../../resources/cache');
+        touch(__DIR__ . '/../../resources/cache/.gitkeep');
     }
 
     public function testGetDownloadedFavPath()
@@ -417,7 +437,7 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
         $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
         $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
 
-        $expected = 'img'. md5('http://domain.tld');
+        $expected = 'img' . md5('http://domain.tld');
         $this->assertEquals($expected, $fav->get('', FaviconDLType::DL_FILE_PATH));
     }
 
@@ -436,7 +456,7 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
         $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
         $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
 
-        $expected = file_get_contents(self::RESOURCES .'/'. self::TEST_LOGO_NAME);
+        $expected = file_get_contents(self::RESOURCES . '/' . self::TEST_LOGO_NAME);
         $this->assertEquals($expected, $fav->get('', FaviconDLType::RAW_IMAGE));
     }
     
@@ -445,12 +465,13 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
      * If it checks default fav (favicon.ico), return 404
      * Return 200 while checking existing favicon
      **/
-    public function headerExistingFav() {
+    public function headerExistingFav()
+    {
         $headerOk = array(0 => 'HTTP/1.1 200 OK');
         $headerKo = array(0 => 'HTTP/1.1 404 KO');
         $args = func_get_args();
         
-        if( strpos($args[0], self::DEFAULT_FAV_CHECK) !== false ) {
+        if (strpos($args[0], self::DEFAULT_FAV_CHECK) !== false) {
             return $headerKo;
         }
         return $headerOk;
@@ -461,12 +482,13 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
      * return valid header, or icon file content if url contain '.ico'.
      * Return 200 while checking existing favicon
      **/
-    public function contentExistingFav() {
-        $xml = '<head><link rel="icon" href="'. self::TEST_LOGO_NAME .'" /></head>';
+    public function contentExistingFav()
+    {
+        $xml = '<head><link rel="icon" href="' . self::TEST_LOGO_NAME . '" /></head>';
         $ico = file_get_contents($this->RESOURCE_FAV_ICO);
         $args = func_get_args();
         
-        if( strpos($args[0], '.ico') !== false ) {
+        if (strpos($args[0], '.ico') !== false) {
             return $ico;
         }
         return $xml;
@@ -478,12 +500,13 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
      * Also return 404 if not testing original webdir (original/)
      * Return 200 while checking existing favicon in web subdir
      **/
-    public function headerOriginalFav() {
+    public function headerOriginalFav()
+    {
         $headerOk = array(0 => 'HTTP/1.1 200 OK');
         $headerKo = array(0 => 'HTTP/1.1 404 KO');
         $args = func_get_args();
         
-        if( strpos($args[0], 'original') === false || strpos($args[0], self::DEFAULT_FAV_CHECK) !== false ) {
+        if (strpos($args[0], 'original') === false || strpos($args[0], self::DEFAULT_FAV_CHECK) !== false) {
             return $headerKo;
         }
         
@@ -496,24 +519,26 @@ class FaviconTest extends \PHPUnit_Framework_TestCase {
      * Return proper <head> otherwise
      * Return img for final check
      **/
-    public function contentOriginalFav() {
+    public function contentOriginalFav()
+    {
         $logo = 'default.ico';
-        $xmlOk = '<head><link rel="icon" href="'. $logo .'" /></head>';
+        $xmlOk = '<head><link rel="icon" href="' . $logo . '" /></head>';
         $xmlKo = '<head><crap></crap></head>';
         $ico = file_get_contents($this->RESOURCE_FAV_ICO);
         $args = func_get_args();
         
-        if( strpos($args[0], '.ico') !== false ) {
+        if (strpos($args[0], '.ico') !== false) {
             return $ico;
         }
-        if( strpos($args[0], 'original') === false ) {
+        if (strpos($args[0], 'original') === false) {
             return $xmlKo;
         }
         
         return $xmlOk;
     }
     
-    public static function slash($url) {
-    	return $url . ($url[strlen($url) - 1] == '/' ? '' : '/');
+    public static function slash($url)
+    {
+        return $url . ($url[strlen($url) - 1] == '/' ? '' : '/');
     }
 }
