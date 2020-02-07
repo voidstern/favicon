@@ -278,29 +278,33 @@ class Favicon
         }
         
         $head = $match[0];
-        
+        $attempts = [];
+
         $dom = new \DOMDocument();
         // Use error suppression, because the HTML might be too malformed.
         if (@$dom->loadHTML($head)) {
             $links = $dom->getElementsByTagName('link');
-            /** @var \DOMNode $link */
+            $relAttributes = ['shortcut icon', 'icon', 'favicon'];
+
+            /** @var \DOMElement $link */
             foreach ($links as $link) {
-                if ($link->hasAttribute('rel') && strtolower($link->getAttribute('rel')) == 'shortcut icon') {
+                if ($link->hasAttribute('rel') === false && $link->hasAttribute('apple-touch-icon') === false) {
+                    continue;
+                }
+
+                $rel = $link->getAttribute('rel');
+
+                if ($rel === 'apple-touch-icon') {
                     return $link->getAttribute('href');
                 }
-            }
-            foreach ($links as $link) {
-                if ($link->hasAttribute('rel') && strtolower($link->getAttribute('rel')) == 'icon') {
-                    return $link->getAttribute('href');
-                }
-            }
-            foreach ($links as $link) {
-                if ($link->hasAttribute('href') && strpos($link->getAttribute('href'), 'favicon') !== false) {
-                    return $link->getAttribute('href');
+
+                if (($pos = array_search($rel, $relAttributes)) !== false) {
+                    $attempts[$pos] = $link->getAttribute('href');
                 }
             }
         }
-        return false;
+
+        return count($attempts) > 0 ? reset($attempts) : false;
     }
 
     private function checkCache($url, $type)
