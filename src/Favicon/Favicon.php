@@ -214,7 +214,12 @@ class Favicon
         // Sometimes people lie, so check the status.
         // And sometimes, it's not even an image. Sneaky bastards!
         // If cacheDir isn't writable, that's not our problem
-        if ($favicon && is_writable($this->cacheDir) && extension_loaded('fileinfo') && !$this->checkImageMType($favicon)) {
+        if (
+            $favicon
+            && is_writable($this->cacheDir)
+            && extension_loaded('fileinfo')
+            && !$this->checkImageMType($favicon)
+        ) {
             $favicon = false;
         }
 

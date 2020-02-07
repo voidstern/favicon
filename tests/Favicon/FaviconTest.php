@@ -246,10 +246,16 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         $fav->setDataAccess($dataAccess);
 
         // Header MOCK
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnCallback(array($this, 'headerExistingFav')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnCallback(array($this, 'headerExistingFav')));
         
         // Get from URL MOCK
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnCallback(array($this, 'contentExistingFav')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnCallback(array($this, 'contentExistingFav')));
         $this->assertEquals(self::slash($url . $path) . self::TEST_LOGO_NAME, $fav->get());
     }
     
@@ -270,10 +276,16 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         $fav->setDataAccess($dataAccess);
         
         // Header MOCK
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnCallback(array($this, 'headerOriginalFav')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnCallback(array($this, 'headerOriginalFav')));
         
         // Get from URL MOCK
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnCallback(array($this, 'contentOriginalFav')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnCallback(array($this, 'contentOriginalFav')));
         $this->assertEquals(self::slash($url) . $logo, $fav->get());
     }
     
@@ -293,8 +305,14 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         $fav->setDataAccess($dataAccess);
         
         // Header MOCK
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 200 KO')));
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnValue(array(0 => 'HTTP/1.1 200 KO')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
         
         $this->assertEquals(self::slash($url) . self::DEFAULT_FAV_CHECK, $fav->get());
     }
@@ -315,8 +333,14 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         $fav->setDataAccess($dataAccess);
         
         // Header MOCK
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
         
         // Save default favicon in cache
         $fav->get();
@@ -325,8 +349,14 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         $fav->cache(array('timeout' => 30, 'dir' => $this->CACHE_TEST_DIR));
         $dataAccess = $this->getMock('Favicon\DataAccess', array('retrieveHeader', 'retrieveUrl'));
         $fav->setDataAccess($dataAccess);
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 404 KO')));
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue('<head><crap></crap></head>'));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnValue(array(0 => 'HTTP/1.1 404 KO')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnValue('<head><crap></crap></head>'));
         
         $this->assertEquals(self::slash($url) . self::DEFAULT_FAV_CHECK, $fav->get());
     }
@@ -354,8 +384,14 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         
         $dataAccess = $this->getMock('Favicon\DataAccess');
         $fav->setDataAccess($dataAccess);
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 404 KO')));
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue('<head><crap></crap></head>'));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnValue(array(0 => 'HTTP/1.1 404 KO')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnValue('<head><crap></crap></head>'));
         
         $this->assertFalse($fav->get());
     }
@@ -373,8 +409,14 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         
         $dataAccess = $this->getMock('Favicon\DataAccess', array('retrieveHeader', 'retrieveUrl'));
         $fav->setDataAccess($dataAccess);
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue('<head><crap></crap></head>'));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnValue('<head><crap></crap></head>'));
         
         $this->assertFalse($fav->get());
     }
@@ -395,8 +437,14 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         $fav->setDataAccess($dataAccess);
         
         // MOCK
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 404 KO')));
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue('<crap></crap>'));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnValue(array(0 => 'HTTP/1.1 404 KO')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnValue('<crap></crap>'));
         
         $this->assertFalse($fav->get());
     }
@@ -414,8 +462,14 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         $fav->setDataAccess($dataAccess);
         
         // MOCK
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
         
         $this->assertEquals(self::slash($url) . self::DEFAULT_FAV_CHECK, $fav->get());
         directory_clear(__DIR__ . '/../../resources/cache');
@@ -434,8 +488,14 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         $fav->setDataAccess($dataAccess);
 
         // MOCK
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
 
         $expected = 'img' . md5('http://domain.tld');
         $this->assertEquals($expected, $fav->get('', FaviconDLType::DL_FILE_PATH));
@@ -453,8 +513,14 @@ class FaviconTest extends \PHPUnit_Framework_TestCase
         $fav->setDataAccess($dataAccess);
 
         // MOCK
-        $dataAccess->expects($this->any())->method('retrieveHeader')->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
-        $dataAccess->expects($this->any())->method('retrieveUrl')->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveHeader')
+            ->will($this->returnValue(array(0 => 'HTTP/1.1 200 OK')));
+        $dataAccess
+            ->expects($this->any())
+            ->method('retrieveUrl')
+            ->will($this->returnValue(file_get_contents($this->RESOURCE_FAV_ICO)));
 
         $expected = file_get_contents(self::RESOURCES . '/' . self::TEST_LOGO_NAME);
         $this->assertEquals($expected, $fav->get('', FaviconDLType::RAW_IMAGE));
