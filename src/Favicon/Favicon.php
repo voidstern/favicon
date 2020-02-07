@@ -283,6 +283,7 @@ class Favicon
         // Use error suppression, because the HTML might be too malformed.
         if (@$dom->loadHTML($head)) {
             $links = $dom->getElementsByTagName('link');
+            /** @var \DOMNode $link */
             foreach ($links as $link) {
                 if ($link->hasAttribute('rel') && strtolower($link->getAttribute('rel')) == 'shortcut icon') {
                     return $link->getAttribute('href');
