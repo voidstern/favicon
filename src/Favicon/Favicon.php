@@ -254,20 +254,6 @@ class Favicon
         }
     }
 
-    /**
-     * Display data as a PNG Favicon, then exit
-     * @param $data
-     */
-    private function displayFavicon($data)
-    {
-        header('Content-Type: image/png');
-        header('Cache-Control: private, max-age=10800, pre-check=10800');
-        header('Pragma: private');
-        header('Expires: ' . date(DATE_RFC822, strtotime('7 day')));
-        echo $data;
-        exit;
-    }
-
     private function getInPage($url)
     {
         $html = $this->dataAccess->retrieveUrl("{$url}/");
