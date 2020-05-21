@@ -271,6 +271,11 @@ class Favicon
             $links = $dom->getElementsByTagName('link');
             /** @var \DOMNode $link */
             foreach ($links as $link) {
+                if ($link->hasAttribute('rel') && strtolower($link->getAttribute('rel')) == 'apple-touch-icon') {
+                    return $link->getAttribute('href');
+                }
+            }
+            foreach ($links as $link) {
                 if ($link->hasAttribute('rel') && strtolower($link->getAttribute('rel')) == 'shortcut icon') {
                     return $link->getAttribute('href');
                 }
