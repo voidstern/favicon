@@ -197,6 +197,7 @@ class Favicon
         if (!$favicon) {
             $favicon = trim($this->getInPage($url));
         }
+
         // Case of protocol-relative URLs
         if (substr($favicon, 0, 2) === '//') {
             if (preg_match('%^(https?:)//%i', $url, $matches)) {
@@ -204,6 +205,11 @@ class Favicon
             } else {
                 $favicon = 'https:' . $favicon;
             }
+        }
+        
+        // Case of host relative urls
+        if (substr($favicon, 0, 1) == "/") {
+            $url = $this->base_url($url);
         }
         
         // Make sure the favicon is an absolute URL.
@@ -292,6 +298,18 @@ class Favicon
             }
         }
         return false;
+    }
+
+    private function base_url($url) {
+        $protocol = parse_url($url, PHP_URL_SCHEME);
+
+        $url = trim(str_replace('http://', '', trim($url)), '/');
+        $url = trim(str_replace('https://', '', trim($url)), '/');
+        $url = explode('/', $url);
+
+        $host = $url[0];
+
+        return "$protocol://$host/";
     }
 
     private function checkCache($url, $type)
